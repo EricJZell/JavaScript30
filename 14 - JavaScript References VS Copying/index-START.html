@@ -8,10 +8,30 @@
 
   <script>
     // start with strings, numbers and booleans
+    let age = 100;
+    let age2 = age;
+    console.log(age, age2);
+    //we get 100, 100;
+    age = 200;
+    console.log(age, age2);
+    //we get 200, 100; as expected.
+
+    //Try with a string:
+    let name = 'Eric'
+    let name2 = name;
+    console.log(name, name2);
+    //we get Eric, Eric;
+    name = 'Zell';
+    console.log(name, name2);
+    //we get Zell, Eric; as expected.
 
     // Let's say we have an array
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
-
+    const team = players;
+    console.log(players, team);
+    team[3] = 'Lux';
+    console.log(players, team);
+    //WE GET LUX IN BOTH PLAYERS AND TEAM!!!!
     // and we want to make a copy of it.
 
     // You might think we can just do something like this:
@@ -27,24 +47,73 @@
     // So, how do we fix this? We take a copy instead!
 
     // one way
-
+    const team2 = players.slice();
+    team2[0] = 'Tony';
+    console.log(players, team2);
     // or create a new array and concat the old one in
-
+    const team3 = [].concat(players);
+    team3[0] = 'Boss';
+    console.log(players, team3);
     // or use the new ES6 Spread
-
+    const team4 = [...players];
+    team4[0] = "Frank";
+    console.log(players, team4);
     // now when we update it, the original one isn't changed
 
     // The same thing goes for objects, let's say we have a person object
-
+    const person = {
+      name: 'Eric Zell',
+      age: 80
+    };
     // with Objects
 
     // and think we make a copy:
+    const captain = person;
+    captain.number = 99;
+    console.log(person); // Person now has number 99!! It's a reference, not a copy!!
 
     // how do we take a copy instead?
-
+    const person2 = Object.assign({}, person, {number: 85});
+    console.log(person);
+    console.log(person2);
     // We will hopefully soon see the object ...spread
 
     // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    const eric = {
+      name: "Eric",
+      age: 31,
+      social: {
+        twitter: '@ez_codes',
+        facebook: 'ericjzell18'
+      }
+    };
+
+    console.log(eric);
+
+    const dev = Object.assign({}, eric);
+    dev.age = 100;
+    console.log('Eric:');
+    console.log(eric);
+    console.log('Dev');
+    console.log(dev); //Eric's age is still 31 because we made a copy!
+
+    // Object.assign copy is very shallow, i.e. it only goes one level deep:
+
+    dev.social.twitter = '@haha_dude';
+    console.log('Eric:');
+    console.log(eric);
+    console.log('Dev');
+    console.log(dev); //It updates Eric's twitter attribute also!
+    //We can search web for deep clone function, or use poor man's cheap clone:
+    //which is convert the object to json string then back to json (non performant though)
+    const dev2 = JSON.parse(JSON.stringify(eric));
+
+    dev2.social.facebook = "Mitch";
+
+    console.log('Eric:');
+    console.log(eric);
+    console.log('Dev2');
+    console.log(dev2); //Now, updating the nested attribute only affects the dev2 copy.
 
   </script>
 
