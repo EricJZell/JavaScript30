@@ -23,16 +23,66 @@
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
     </form>
+    <h3 class="check-all" data-check=true>Check All</h3>
+    <h3 class="check-all" data-check=false>Un-check All</h3>
   </div>
 
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || [];
+  const checkAlls = document.querySelectorAll('.check-all');
+
+  function addItem(e) {
+    e.preventDefault();
+    const text = (this.querySelector('[name=item]')).value;
+    const item = {
+      text: text,
+      done: false
+    }
+    items.push(item);
+    populateList(items, itemsList);
+    localStorage.setItem('items', JSON.stringify(items));
+    this.reset();
+  }
+
+  function populateList(plates = [], platesList) {
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+      <li>
+      <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? "checked" : ''} />
+        <label for="item${i}">${plate.text}</label>
+      </li>
+      `;
+    }).join('');
+  }
+
+  function toggleDone(e) {
+    if(!e.target.matches('input')) return;
+    const index = e.target.dataset.index;
+    items[index].done = !items[index].done;
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+
+  function clearOrFill(e) {
+    //console.log(this)
+
+    items.forEach(item => item.done = (this.dataset['check'] == 'true'));
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+
+  addItems.addEventListener('submit', addItem);
+
+  itemsList.addEventListener('click', toggleDone);
+
+  checkAlls.forEach(checkAll => checkAll.addEventListener('click', clearOrFill));
+
+  populateList(items, itemsList);
 
 </script>
 
 
 </body>
 </html>
-
