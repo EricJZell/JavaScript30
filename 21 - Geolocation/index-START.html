@@ -13,6 +13,12 @@
     <span class="speed-value">0</span>
     <span class="units">KM/H</span>
   </h1>
+  <h3 class="coordinates">
+    Latitude: <span class="latitude">0</span>
+  </h3>
+  <h3>
+    Longitude: <span class="longitude">0</span>
+  </h3>
 
   <style>
     html {
@@ -52,12 +58,35 @@
       align-items: center;
     }
 
+    h3 {
+      color:white;
+      font-weight: 50;
+      font-size: 20px;
+      display:flex;
+      align-items: center;
+    }
+
     .units {
       font-size: 15px;
     }
     /*Compass: https://thenounproject.com/search/?q=compass&i=592352*/
   </style>
   <script>
+    const arrow = document.querySelector('.arrow');
+    const speed = document.querySelector('.speed-value');
+    const lat = document.querySelector('.latitude');
+    const long = document.querySelector('.longitude');
+
+    navigator.geolocation.watchPosition((data) => {
+      speed.textContent = data.coords.speed;
+      arrow.style.transform = `rotate(${data.coords.heading}deg)`;
+      lat.textContent = data.coords.latitude;
+      long.textContent = data.coords.longitude;
+      console.log(data);
+    }, (err) => {
+      console.error(err);
+      alert("You must allow access to your location!");
+    });
   </script>
 </body>
 </html>
